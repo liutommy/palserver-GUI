@@ -3,6 +3,8 @@ import fs from 'fs/promises';
 import fsc from 'fs';
 import { USER_SERVER_INSTANCES_PATH } from '../constant';
 import getServerInfoByServerId from '../services/serverInstanceSettings/getServerInfoByServerId';
+import resolveServerPath from '../services/serverInstanceSettings/resolveServerPath';
+import { findProcessesUnderPath } from './watchdog/processUtils';
 import prepareAndStartServer from './prepareAndStartServer';
 
 /**
@@ -30,6 +32,14 @@ export default async function autoStartServers() {
       // eslint-disable-next-line no-await-in-loop
       const serverInfo = await getServerInfoByServerId(instanceId);
       if (!serverInfo.AutoStartOnLaunch) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+      // 該路徑下已有伺服器在跑 (例如使用者自行啟動) —
+      // 不做自動開服,避免開服前清掃殺掉它
+      // eslint-disable-next-line no-await-in-loop
+      const alive = await findProcessesUnderPath(resolveServerPath(instanceId));
+      if (alive.length > 0) {
         // eslint-disable-next-line no-continue
         continue;
       }

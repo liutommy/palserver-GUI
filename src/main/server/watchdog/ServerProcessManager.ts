@@ -61,6 +61,8 @@ type ManagedServer = {
   userStop: boolean;
   terminatedHandled: boolean;
   gracefulRestart: boolean;
+  /** probeTick 判定掛起後強殺 → 讓接下來的 exit 標記為 hang 而非 crash */
+  hangKillPending: boolean;
   restartTimestamps: number[];
   consecutiveCrashes: number;
   restartCount: number;
@@ -104,6 +106,7 @@ class ServerProcessManager {
       userStop: false,
       terminatedHandled: true,
       gracefulRestart: false,
+      hangKillPending: false,
       restartTimestamps: [],
       consecutiveCrashes: 0,
       restartCount: 0,
@@ -221,6 +224,7 @@ class ServerProcessManager {
     entry.userStop = false;
     entry.terminatedHandled = false;
     entry.gracefulRestart = false;
+    entry.hangKillPending = false;
     entry.probeFailStreak = 0;
     entry.probeReady = false;
     entry.probeBusy = false;
@@ -419,9 +423,10 @@ class ServerProcessManager {
 
   private async handleCrash(entry: ManagedServer, config: WatchdogConfig) {
     const now = Date.now();
-    if (entry.lastEvent !== 'hang') {
-      entry.lastEvent = 'crash';
-    }
+    // 只有這次終止確實是掛起強殺造成的才標記為 hang —
+    // 上一輪事件殘留的 lastEvent 不可污染這次的分類
+    entry.lastEvent = entry.hangKillPending ? 'hang' : 'crash';
+    entry.hangKillPending = false;
     entry.lastEventAt = now;
 
     // 穩定運行超過視窗期後才掛掉的,當作新事件重算退避
@@ -541,6 +546,7 @@ class ServerProcessManager {
       if (entry.probeFailStreak >= PROBE_FAIL_LIMIT) {
         // 程序活著但 REST 連續無回應 → 判定掛起,強制終止後由 exit 流程重啟
         const generationAtHang = entry.generation;
+        entry.hangKillPending = true;
         entry.lastEvent = 'hang';
         entry.lastEventAt = Date.now();
         entry.probeFailStreak = 0;
@@ -803,10 +809,13 @@ class ServerProcessManager {
     const list: { serverId: string; processId: number; queryPort: number }[] =
       [];
     this.servers.forEach((entry) => {
-      if (entry.state === 'starting' || entry.state === 'running') {
+      if (
+        (entry.state === 'starting' || entry.state === 'running') &&
+        entry.launcherPid !== null
+      ) {
         list.push({
           serverId: entry.serverId,
-          processId: entry.launcherPid ?? 0,
+          processId: entry.launcherPid,
           queryPort: entry.queryPort,
         });
       }

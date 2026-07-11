@@ -672,6 +672,11 @@ function SettingsItem({
 }) {
   const { t } = useTranslation();
 
+  // 輸入框編輯期間用本地草稿,失焦才寫回 —
+  // 背景每 300ms 輪詢 + 整份覆寫的設定流,逐鍵寫回會掉字
+  const [draft, setDraft] = useState('');
+  const [editing, setEditing] = useState(false);
+
   return (
     <Theme appearance="dark" style={{ background: 'inherit' }}>
       <div className="flex items-center justify-between w-[80%]">
@@ -687,9 +692,19 @@ function SettingsItem({
               <TextField.Root
                 disabled={disabled}
                 type={secure ? 'password' : 'text'}
-                value={value || ''}
+                value={editing ? draft : value || ''}
+                onFocus={() => {
+                  setDraft(value || '');
+                  setEditing(true);
+                }}
+                onBlur={() => {
+                  setEditing(false);
+                  if (draft !== (value || '')) {
+                    onValueChange(draft);
+                  }
+                }}
                 onChange={(e) => {
-                  onValueChange(e.target.value);
+                  setDraft(e.target.value);
                 }}
                 style={{ fontFamily: 'inherit', fontSize: 16, width: 120 }}
               />

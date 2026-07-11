@@ -39,7 +39,11 @@ export default async function backupSaveGames(
 
   let created: string | null = null;
   try {
-    const script = `Compress-Archive -Path "${saveGamesPath}\\*" -DestinationPath "${destZip}" -CompressionLevel Optimal -Force`;
+    // 單引號字串 + LiteralPath:路徑含 $ ` ( ) [ ] 等字元時不被 PowerShell 解讀
+    const psQuote = (s: string) => `'${s.replace(/'/g, "''")}'`;
+    const script = `Compress-Archive -LiteralPath ${psQuote(
+      saveGamesPath,
+    )} -DestinationPath ${psQuote(destZip)} -CompressionLevel Optimal -Force`;
     await execFileAsync(
       'powershell.exe',
       [
@@ -54,7 +58,8 @@ export default async function backupSaveGames(
     );
     created = destZip;
   } catch (e) {
-    // 壓縮失敗 (檔案過大 / PowerShell 異常) → 純資料夾複製
+    // 壓縮失敗 (逾時 / PowerShell 異常) → 先清掉寫到一半的 zip,再退化為資料夾複製
+    await fs.rm(destZip, { force: true }).catch(() => {});
     try {
       const destDir = path.join(backupDir, `saves-${stamp}`);
       await fs.cp(saveGamesPath, destDir, { recursive: true, force: true });

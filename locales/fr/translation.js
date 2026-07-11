@@ -473,6 +473,7 @@ const fr = {
     'PalServer.exe est introuvable dans le dossier sélectionné.',
   ImportServerAlreadyImported: 'Ce serveur a déjà été importé.',
   Import: 'Importer',
+  Open: 'Ouvrir',
   // notifications
   Notifications: 'Notifications',
   NotifyDesktopEnabled: 'Notifications de bureau',

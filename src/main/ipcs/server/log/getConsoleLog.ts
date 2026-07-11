@@ -20,7 +20,11 @@ ipcMain.handle(Channels.getConsoleLog, async (event, serverId: string) => {
     );
     if (fsc.existsSync(capturedPath)) {
       const captured = await fs.readFile(capturedPath, { encoding: 'utf-8' });
-      if (captured.trim()) return captured;
+      if (captured.trim()) {
+        return captured.length > TAIL_LIMIT
+          ? captured.slice(-TAIL_LIMIT)
+          : captured;
+      }
     }
 
     const ueLogPath = path.join(

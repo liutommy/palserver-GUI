@@ -49,6 +49,7 @@ export default function ServerLog({
   // PalDefender 插件日誌 (原有行為)
   useEffect(() => {
     if (source !== 'palguard') return undefined;
+    setLog([]); // 清掉上一個來源的內容,讀不到時才不會殘留
     window.electron.ipcRenderer.sendMessage(
       Channels.getServerLog,
       selectedServerInstance,

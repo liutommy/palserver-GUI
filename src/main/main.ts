@@ -45,6 +45,13 @@ let tray: Tray | null = null;
 // 關閉視窗 = 縮到系統匣 (watchdog 需要 GUI 存活);只有明確結束才真的退出
 let isQuitting = false;
 
+// 系統匣模式下 app 會隱形存活,再點捷徑會啟動第二個實例 —
+// 兩個 ServerProcessManager 的開服前清掃會互殺對方的伺服器,必須鎖單一實例
+const gotSingleInstanceLock = app.requestSingleInstanceLock();
+if (!gotSingleInstanceLock) {
+  app.quit();
+}
+
 // ipcMain.on('ipc-example', async (event, arg) => {
 //   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
 //   console.log(msgTemplate(arg));
@@ -199,34 +206,47 @@ const createTray = () => {
   tray.on('double-click', showMainWindow);
 };
 
-app
-  .whenReady()
-  .then(() => {
-    createWindow();
-    createTray();
-    // 稍等主視窗載入後再自動開服,DONE 廣播才收得到;
-    // 就算視窗還沒好,renderer 掛載時也會經由 get-running-servers 補同步
-    setTimeout(() => {
-      autoStartServers().catch(console.log);
-    }, 3000);
-    app.on('activate', () => {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
-      if (mainWindow === null) createWindow();
-    });
-  })
-  .catch(console.log);
+if (gotSingleInstanceLock) {
+  // 第二個實例啟動時,喚出既有實例的視窗
+  app.on('second-instance', () => {
+    showMainWindow();
+  });
 
-// 開機自動啟動 (Windows 登入時以系統匣模式啟動)
+  app
+    .whenReady()
+    .then(() => {
+      if (!gotSingleInstanceLock) return;
+      createWindow();
+      createTray();
+      // 稍等主視窗載入後再自動開服,DONE 廣播才收得到;
+      // 就算視窗還沒好,renderer 掛載時也會經由 get-running-servers 補同步
+      setTimeout(() => {
+        autoStartServers().catch(console.log);
+      }, 3000);
+      app.on('activate', () => {
+        // On macOS it's common to re-create a window in the app when the
+        // dock icon is clicked and there are no other windows open.
+        if (mainWindow === null) createWindow();
+      });
+    })
+    .catch(console.log);
+}
+
+// 開機自動啟動 (Windows 登入時以系統匣模式啟動)。
+// 讀取時必須帶與寫入相同的 args,否則 openAtLogin 永遠回報 false;
+// 開發模式會註冊到 electron.exe,不允許
+const LOGIN_ITEM_OPTIONS = { args: ['--hidden'] };
 ipcMain.handle('get-login-item', () => {
-  return app.getLoginItemSettings().openAtLogin;
+  if (!app.isPackaged) return false;
+  return app.getLoginItemSettings(LOGIN_ITEM_OPTIONS).openAtLogin;
 });
 ipcMain.handle('set-login-item', (event, enabled: boolean) => {
+  if (!app.isPackaged) return false;
   app.setLoginItemSettings({
     openAtLogin: Boolean(enabled),
-    args: ['--hidden'],
+    ...LOGIN_ITEM_OPTIONS,
   });
-  return app.getLoginItemSettings().openAtLogin;
+  return app.getLoginItemSettings(LOGIN_ITEM_OPTIONS).openAtLogin;
 });
 
 ipcMain.handle('selectDir', async () => {

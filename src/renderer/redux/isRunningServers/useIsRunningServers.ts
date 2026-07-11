@@ -18,9 +18,10 @@ const useIsRunningServers = () => {
   ) => {
     dispatch(
       isRunningServersAction(
+        // 新事件優先 — watchdog 重啟後的新 PID 必須覆蓋舊項目
         _.unionBy(
-          isRunningServers,
           [{ serverId, processId, queryPort }],
+          isRunningServers,
           'serverId',
         ),
       ),
