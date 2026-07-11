@@ -68,6 +68,11 @@ ipcMain.handle(
       OnlineMapEnabled: false,
       LogEnabled: true,
       UseIndependentProcess: true,
+      WatchdogEnabled: true,
+      WatchdogHangProbe: true,
+      WatchdogMaxRestarts: 3,
+      WatchdogStartupGraceSec: 180,
+      RestartSkipIfPlayersOnline: true,
     };
     fs.writeFile(
       serverInstanceSettingPath,

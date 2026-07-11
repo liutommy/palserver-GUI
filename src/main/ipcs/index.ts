@@ -1,5 +1,6 @@
 // instance
 import './server/instance/createServerInstance';
+import './server/instance/importServerInstance';
 import './server/instance/editServerInstance';
 import './server/instance/deleteServerInstance';
 import './server/instance/duplicateServerInstance';
@@ -28,6 +29,9 @@ import './utils/alert';
 // server
 import './server/exec/execStartServer';
 import './server/exec/execShutdownServer';
+
+// watchdog
+import './server/watchdog/getWatchdogStatus';
 
 // log
 import './server/log/getServerLog';

@@ -2,13 +2,11 @@ import { ipcMain } from 'electron';
 import Channels from '../../channels';
 import fsc from 'fs';
 import path from 'path';
-import { USER_SERVER_INSTANCES_PATH } from '../../../constant';
+import resolveServerPath from '../../../services/serverInstanceSettings/resolveServerPath';
 
 ipcMain.handle(Channels.getPakMods, async (event, serverId: string) => {
   const pakModsPath = path.join(
-    USER_SERVER_INSTANCES_PATH,
-    serverId,
-    'server',
+    resolveServerPath(serverId),
     'Pal/Content/Paks',
   );
 

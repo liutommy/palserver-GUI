@@ -12,6 +12,7 @@ import {
   TEMPLATE_PATH,
   USER_SERVER_INSTANCES_PATH,
 } from './constant';
+import resolveServerPath from './services/serverInstanceSettings/resolveServerPath';
 
 export type ChannelsType = (typeof Channels)[keyof typeof Channels];
 
@@ -67,9 +68,7 @@ const electronHandler = {
       try {
         const version = fs.readFileSync(
           path.join(
-            USER_SERVER_INSTANCES_PATH,
-            serverId,
-            'server',
+            resolveServerPath(serverId),
             'Pal/Binaries/Win64',
             'palguard.version.txt',
           ),
@@ -91,9 +90,7 @@ const electronHandler = {
       try {
         const version = fs.readFileSync(
           path.join(
-            USER_SERVER_INSTANCES_PATH,
-            serverId,
-            'server',
+            resolveServerPath(serverId),
             'Pal/Binaries/Win64',
             'ue4ss.version.txt',
           ),

@@ -1,13 +1,11 @@
 import path from 'path';
-import { USER_SERVER_INSTANCES_PATH } from '../../constant';
 import fsc from 'fs';
 import readWorldSettingsini from './readWorldSettingsini';
+import resolveServerPath from '../serverInstanceSettings/resolveServerPath';
 
 export default async (serverId: string) => {
   const worldSettingsPath = path.join(
-    USER_SERVER_INSTANCES_PATH,
-    serverId,
-    'server',
+    resolveServerPath(serverId),
     'Pal/Saved/Config/WindowsServer/PalWorldSettings.ini',
   );
 

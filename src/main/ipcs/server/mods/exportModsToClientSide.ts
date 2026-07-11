@@ -5,6 +5,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { USER_SERVER_INSTANCES_PATH } from '../../../constant';
 import openExplorer from 'explorer-opener';
+import resolveServerPath from '../../../services/serverInstanceSettings/resolveServerPath';
 
 ipcMain.handle(
   Channels.exportModsToClientSide,
@@ -24,15 +25,11 @@ ipcMain.handle(
         './Pal/Content/Paks',
       );
       const serverLuaModPath = path.join(
-        USER_SERVER_INSTANCES_PATH,
-        serverId,
-        'server',
+        resolveServerPath(serverId),
         'Pal/Binaries/Win64/Mods',
       );
       const serverPakModPath = path.join(
-        USER_SERVER_INSTANCES_PATH,
-        serverId,
-        'server',
+        resolveServerPath(serverId),
         'Pal/Content/Paks',
       );
       // 將上次生成的 lua 模組清空

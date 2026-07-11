@@ -1,11 +1,11 @@
 import path from 'path';
-import { USER_SERVER_INSTANCES_PATH } from '../../constant';
 import fsc from 'fs';
 import getSortedFiles from '../../utils/getSortedFiles';
 import convertToWorldOptionsSav from './convertToWorldOptionsSav';
+import resolveServerPath from '../serverInstanceSettings/resolveServerPath';
 
 export default async (serverId: string) => {
-  const serverPath = path.join(USER_SERVER_INSTANCES_PATH, serverId, 'server');
+  const serverPath = resolveServerPath(serverId);
 
   const worldSettingsPath = path.join(
     serverPath,

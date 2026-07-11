@@ -1,15 +1,16 @@
 import { ipcMain } from 'electron';
 import Channels from '../../channels';
-import { STEAMCMD_PATH, USER_SERVER_INSTANCES_PATH } from '../../../constant';
+import { STEAMCMD_PATH } from '../../../constant';
 import path from 'path';
 import { spawn } from 'child_process';
+import resolveServerPath from '../../../services/serverInstanceSettings/resolveServerPath';
 
 ipcMain.on(Channels.updateServerInstance, async (event, serverId: string) => {
   const steamcmd = path.join(STEAMCMD_PATH, 'steamcmd.exe');
 
   const palserverUpdate = spawn(steamcmd, [
     '+force_install_dir',
-    path.join(USER_SERVER_INSTANCES_PATH, serverId, 'server'),
+    resolveServerPath(serverId),
     '+login',
     'anonymous',
     '+app_update',

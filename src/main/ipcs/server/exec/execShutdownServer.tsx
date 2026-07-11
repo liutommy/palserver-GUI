@@ -1,30 +1,10 @@
 import { ipcMain } from 'electron';
 import Channels from '../../channels';
-import getServerInfoByServerId from '../../../services/serverInstanceSettings/getServerInfoByServerId';
-import getWorldSettingsByServerId from '../../../services/worldSettings/getWorldSettingsByServerId';
-import trimWorldSettingsString from '../../../../utils/trimWorldSettingsString';
-import sendCommand from '../../../utils/rcon/sendCommand';
+import serverProcessManager from '../../../server/watchdog/ServerProcessManager';
 
 ipcMain.on(Channels.execShutdownServer, async (event, serverId, processId) => {
-  const worldSettings = await getWorldSettingsByServerId(serverId);
-  const serverOptions = {
-    ipAddress: '127.0.0.1',
-    port: worldSettings.RCONPort,
-    password: trimWorldSettingsString(worldSettings.AdminPassword),
-  };
-  const isEnabledRCON = worldSettings.RCONEnabled;
-
-  try {
-    // 存檔
-    await sendCommand(serverOptions, 'save');
-    if (isEnabledRCON) {
-      // 執行 rcon 關閉伺服器
-      await sendCommand(serverOptions, 'shutdown 1');
-    } else {
-      //
-      process.kill(processId);
-    }
-  } catch (e) {
-    process.kill(processId);
-  }
+  // manager 會先標記使用者主動停止 (watchdog 才不會把它當崩潰拉起來),
+  // 再走 REST/RCON 優雅關機,最後以 taskkill /T 樹狀終止作保底 —
+  // 舊實作的單一 process.kill 會讓 Shipping 子程序變孤兒
+  await serverProcessManager.stop(serverId, processId);
 });

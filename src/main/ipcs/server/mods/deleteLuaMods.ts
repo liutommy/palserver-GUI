@@ -2,17 +2,15 @@ import { ipcMain } from 'electron';
 import Channels from '../../channels';
 import fsc from 'fs';
 import path from 'path';
-import { USER_SERVER_INSTANCES_PATH } from '../../../constant';
 import { ServerInstanceSetting } from '../../../../types/ServerInstanceSetting.types';
 import isJsonString from '../../../../utils/isJsonString';
+import resolveServerPath from '../../../services/serverInstanceSettings/resolveServerPath';
 
 ipcMain.handle(
   Channels.deleteLuaMods,
   async (event, serverId: string, modName: string) => {
     const luaModPath = path.join(
-      USER_SERVER_INSTANCES_PATH,
-      serverId,
-      'server',
+      resolveServerPath(serverId),
       'Pal/Binaries/Win64/Mods',
       modName,
     );

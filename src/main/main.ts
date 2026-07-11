@@ -19,6 +19,7 @@ import { resolveHtmlPath } from './util';
 import './ipcs/index';
 // servers
 import './server/server-online-map/server';
+import serverProcessManager from './server/watchdog/ServerProcessManager';
 
 process.setMaxListeners(0);
 
@@ -134,6 +135,12 @@ const createWindow = async () => {
 //     app.quit();
 //   }
 // });
+
+// 結束前停掉 watchdog 計時器,避免退出過程中觸發重啟;
+// 伺服器程序刻意不殺 — 關閉 GUI 不代表要關伺服器
+app.on('before-quit', () => {
+  serverProcessManager.dispose();
+});
 
 app
   .whenReady()

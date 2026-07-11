@@ -19,8 +19,14 @@ const Channels = {
     ERROR: 'exec-start-server:error',
   },
   execShutdownServer: 'exec-shutdown-server',
+  // watchdog
+  getWatchdogStatus: 'get-watchdog-status',
+  watchdogStatusReply: {
+    DATA: 'watchdog-status:data',
+  },
   // 伺服器實體
   createServerInstance: 'create-server-instance',
+  importServerInstance: 'import-server-instance',
   editServerInstance: 'edit-server-instance',
   deleteServerInstance: 'delete-server-instance',
   duplicateServerInstance: 'duplicate-server-instance',

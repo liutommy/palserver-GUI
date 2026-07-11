@@ -1,12 +1,12 @@
 import { ipcMain } from 'electron';
 import Channels from '../../channels';
 import path from 'path';
-import { USER_SERVER_INSTANCES_PATH } from '../../../constant';
 import fs from 'fs';
 import getSortedFiles from '../../../utils/getSortedFiles';
+import resolveServerPath from '../../../services/serverInstanceSettings/resolveServerPath';
 
 ipcMain.on(Channels.getServerLog, async (event, serverId) => {
-  const serverPath = path.join(USER_SERVER_INSTANCES_PATH, serverId, 'server');
+  const serverPath = resolveServerPath(serverId);
   const serverLogsPath = path.join(
     serverPath,
     'Pal/Binaries/Win64/PalDefender/logs',
