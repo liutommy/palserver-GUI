@@ -246,7 +246,7 @@
       "target": [
         "nsis"
       ],
-      "compression": "none"
+      "compression": "store"
     },
     "linux": {
       "target": [
