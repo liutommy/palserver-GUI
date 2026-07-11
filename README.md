@@ -9,6 +9,35 @@
 
 > 加入我們的 Discord 以獲得更多資訊 - https://discord.gg/sgMMdUZd3V
 
+---
+
+## 🐕 Watchdog 分支（此 fork 新增）
+
+此 fork 的 `watchdog` 分支在原專案之上新增：
+
+- **看門狗自動重啟**：伺服器崩潰或無回應（REST 探測）時自動重啟，含重啟退避、10 分鐘內次數上限保護、殘留程序清掃
+- **匯入現有伺服器**：直接就地管理既有的專用伺服器資料夾（如 SteamLibrary 下的 PalServer），不複製檔案
+- **排程重啟**：REST 公告倒數 → 存檔 → 優雅關機，可設定「有玩家在線時順延」；另有記憶體超標自動重啟
+- **重啟前自動備份**：SaveGames 壓縮備份，保留最近 10 份
+- **事件通知**：Discord Webhook + Windows 桌面通知
+- **無人值守**：系統匣常駐、開機自動啟動、隨 GUI 自動開服
+- **日誌檢視器**：伺服器主控台 / PalDefender / UE 崩潰紀錄
+
+### 從原始碼建置（Node.js 22+）
+
+```bash
+git clone -b watchdog https://github.com/liutommy/palserver-GUI
+cd palserver-GUI
+npm install
+npm run setup:engine   # 從官方 release 下載引擎資產 (~240MB，必要)
+npm start              # 開發模式
+npm run package        # 打包安裝檔（輸出於 release/build）
+```
+
+> 依上游授權聲明（不得二次打包散佈），請自行從原始碼建置使用，勿散佈打包後的安裝檔。
+
+---
+
 palserver GUI 是一款全圖形化介面的專用伺服器架設、管理工具：
 
 - **開箱即用**：易於上手，傻瓜式安裝 + 一鍵啟動伺服器。

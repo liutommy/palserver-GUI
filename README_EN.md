@@ -9,6 +9,35 @@
 
 > Join our Discord for more infomation - https://discord.gg/sgMMdUZd3V
 
+---
+
+## 🐕 Watchdog Branch (added by this fork)
+
+The `watchdog` branch of this fork adds, on top of the original project:
+
+- **Watchdog auto-restart**: restarts the server on crash or hang (REST liveness probe), with restart backoff, a max-restarts-per-10-minutes guard, and leftover-process sweeping
+- **Import existing servers**: manage an existing dedicated server folder (e.g. PalServer under SteamLibrary) in place, without copying files
+- **Scheduled restarts**: REST countdown announcements → save → graceful shutdown, with an optional "postpone while players online" guard; plus memory-ceiling restart
+- **Pre-restart backups**: SaveGames zipped before every automatic restart (keeps the latest 10)
+- **Event notifications**: Discord webhook + Windows desktop notifications
+- **Unattended uptime**: system tray mode, start on boot, auto-start servers with the GUI
+- **Log viewer**: server console / PalDefender / UE crash dumps
+
+### Build from source (Node.js 22+)
+
+```bash
+git clone -b watchdog https://github.com/liutommy/palserver-GUI
+cd palserver-GUI
+npm install
+npm run setup:engine   # downloads engine assets (~240MB) from the official release (required)
+npm start              # development mode
+npm run package        # build the installer (output in release/build)
+```
+
+> Per the upstream license notice (no re-packaged distribution), please build from source for your own use and do not distribute packaged installers.
+
+---
+
 Palserver GUI is a dedicated server setup and management tool with a fully graphical interface:
 
 - **Easy to use**：Easy to get started, with a foolproof installation and one-click server start.
