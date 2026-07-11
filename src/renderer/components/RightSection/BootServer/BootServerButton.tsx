@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import useTranslation from '../../../hooks/translation/useTranslation';
 import Channels from '../../../../main/ipcs/channels';
 import useSelectedServerInstance from '../../../redux/selectedServerInstance/useSelectedServerInstance';
@@ -12,12 +12,7 @@ export default function BootServerButton() {
   const { t } = useTranslation();
 
   const { selectedServerInstance } = useSelectedServerInstance();
-  const {
-    addIsRunningServers,
-    removeIsRunningServers,
-    includeRunningServers,
-    isRunningServers,
-  } = useIsRunningServers();
+  const { includeRunningServers, isRunningServers } = useIsRunningServers();
   const isServerRunning = includeRunningServers(selectedServerInstance);
 
   // 啟動伺服器
@@ -62,25 +57,8 @@ export default function BootServerButton() {
     );
   };
 
-  useEffect(() => {
-    const done = window.electron.ipcRenderer.on(
-      Channels.execStartServerReply.DONE,
-      (serverId, processId, queryPort) => {
-        addIsRunningServers(serverId, processId, queryPort);
-      },
-    );
-    const exit = window.electron.ipcRenderer.on(
-      Channels.execStartServerReply.EXIT,
-      (serverId) => {
-        removeIsRunningServers(serverId);
-      },
-    );
-
-    return () => {
-      done();
-      exit();
-    };
-  }, [addIsRunningServers, removeIsRunningServers]);
+  // DONE/EXIT 監聽已移至常駐的 ServerLifecycleListener,
+  // watchdog 背景重啟時才不會遺失新 PID
 
   return (
     <div>

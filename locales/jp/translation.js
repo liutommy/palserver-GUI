@@ -286,7 +286,8 @@ const jp = {
   ServerPasswordDesc: 'サーバーのパスワードを設定します。',
   AdminPasswordDesc: '管理者パスワードを設定します。',
   AutoRestart: '自動再起動',
-  AutoRestartDesc: '定期的にサーバーを再起動します。RCON有効時のみ使用可能。',
+  AutoRestartDesc:
+    '一定時間ごとにサーバーを自動再起動します（再起動前に告知とセーブを行います）。次回起動時に有効になります。',
   CrashRestart: 'クラッシュ時再起動',
   CrashRestartDesc:
     'サーバーがクラッシュした場合に再起動します。RCON有効時のみ使用可能。',
@@ -416,6 +417,33 @@ const jp = {
   Install: 'インストール',
   OneClickUpdate: '一括更新',
   HowToGetIPAdress: 'IPアドレスを取得する方法は？',
+  // watchdog
+  Watchdog: 'ウォッチドッグ（自動再起動）',
+  WatchdogEnabled: 'クラッシュ時自動再起動',
+  WatchdogEnabledDesc:
+    'サーバープロセスがクラッシュした際に自動的に再起動します。短時間に連続してクラッシュした場合は再起動を中止します。',
+  WatchdogHangProbe: 'フリーズ検知',
+  WatchdogHangProbeDesc:
+    '公式 REST API を定期的に確認し、応答しないサーバーを強制再起動します。起動時に PalWorldSettings.ini へ RESTAPIEnabled を自動追記します。',
+  WatchdogMaxRestarts: '自動再起動の上限回数',
+  WatchdogMaxRestartsDesc:
+    '10 分以内の自動再起動がこの回数に達すると、ウォッチドッグは再起動を中止します。',
+  RestartSkipIfPlayersOnline: 'プレイヤーがいる場合は定期再起動をスキップ',
+  RestartSkipIfPlayersOnlineDesc:
+    '定期再起動の時刻にプレイヤーがオンラインの場合、次の周期まで延期します。',
+  WatchdogStatusProtected: '保護中',
+  WatchdogStatusRestarting: '再起動中',
+  WatchdogStatusGaveUp: '再起動中止',
+  WatchdogStatusUnmonitored: '監視なし',
+  // import local server
+  ImportLocalServer: 'ローカルサーバーをインポート',
+  ImportLocalServerDesc:
+    '既存の Palworld 専用サーバーフォルダ（PalServer.exe を含む）を選択してください。ファイルをコピーせずそのまま管理します。',
+  SelectServerFolder: 'フォルダを選択',
+  ImportServerInvalidPath:
+    '選択したフォルダに PalServer.exe が見つかりません。',
+  ImportServerAlreadyImported: 'このサーバーは既にインポートされています。',
+  Import: 'インポート',
 };
 
 export default jp;

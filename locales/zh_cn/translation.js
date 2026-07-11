@@ -276,7 +276,8 @@ const zh_cn = {
   ServerPasswordDesc: '为服务器设置密码。',
   AdminPasswordDesc: '设置管理员密码。',
   AutoRestart: '自动重启',
-  AutoRestartDesc: '每隔一段时间时重新启动服务器。需啟用 RCON 才能使用。',
+  AutoRestartDesc:
+    '每隔一段时间自动重启服务器（重启前会公告并存档）。于下次启动时生效。',
   CrashRestart: '崩溃重启',
   CrashRestartDesc: '在服务器崩溃时重新启动服务器。需啟用 RCON 才能使用。',
   OverRamRestart: '超过阈值重启',
@@ -393,5 +394,31 @@ const zh_cn = {
   Install: '安裝',
   OneClickUpdate: '一次更新',
   HowToGetIPAdress: '如何获取 IP 地址？',
+  // watchdog
+  Watchdog: '看门狗（自动重启）',
+  WatchdogEnabled: '崩溃自动重启',
+  WatchdogEnabledDesc:
+    '服务器进程崩溃时自动重新启动。短时间内连续崩溃会自动放弃并停止重启。',
+  WatchdogHangProbe: '无响应检测',
+  WatchdogHangProbeDesc:
+    '通过官方 REST API 定期检测服务器是否无响应（卡死），连续失败时强制重启。启动时会自动在 PalWorldSettings.ini 补上 RESTAPIEnabled 设置。',
+  WatchdogMaxRestarts: '重启次数上限',
+  WatchdogMaxRestartsDesc:
+    '10 分钟内自动重启次数达到上限后，看门狗会放弃重启。',
+  RestartSkipIfPlayersOnline: '有玩家时跳过计划重启',
+  RestartSkipIfPlayersOnlineDesc:
+    '计划重启时间到时若仍有玩家在线，顺延一个周期。',
+  WatchdogStatusProtected: '保护中',
+  WatchdogStatusRestarting: '重启中',
+  WatchdogStatusGaveUp: '已放弃重启',
+  WatchdogStatusUnmonitored: '未受监控',
+  // import local server
+  ImportLocalServer: '导入本机服务器',
+  ImportLocalServerDesc:
+    '选择现有的 Palworld 专用服务器文件夹（需包含 PalServer.exe），GUI 会直接就地管理，不会复制或移动文件。',
+  SelectServerFolder: '选择文件夹',
+  ImportServerInvalidPath: '所选文件夹中找不到 PalServer.exe。',
+  ImportServerAlreadyImported: '这个服务器已经导入过了。',
+  Import: '导入',
 };
 export default zh_cn;

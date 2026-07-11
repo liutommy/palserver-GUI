@@ -8,7 +8,7 @@ export default function ServerRunningBadge() {
   const { includeRunningServers } = useIsRunningServers();
 
   return (
-    <div className="self-end">
+    <div>
       {includeRunningServers(selectedServerInstance) ? (
         <Badge color="grass" size="3" variant="solid">
           Online

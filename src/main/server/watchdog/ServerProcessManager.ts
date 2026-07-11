@@ -229,7 +229,15 @@ class ServerProcessManager {
       //
     }
 
-    await this.launch(entry);
+    try {
+      await this.launch(entry);
+    } catch (e) {
+      // .pal / ini 損毀等例外:不讓 state 卡在 starting
+      entry.state = 'stopped';
+      entry.terminatedHandled = true;
+      this.emitStatus(entry);
+      return null;
+    }
     return entry.launcherPid;
   }
 
@@ -416,6 +424,8 @@ class ServerProcessManager {
       ];
     await sleep(backoff);
     if (entry.userStop) return;
+    // 退避期間使用者已手動重新開服 → 不再重複啟動
+    if (entry.state === 'starting' || entry.state === 'running') return;
 
     try {
       await sweepServerProcesses(entry.serverPath);
@@ -693,7 +703,12 @@ class ServerProcessManager {
       //
     }
 
-    if (!entry) {
+    if (entry) {
+      // 若 exit 事件已在崩潰流程中處理過 (例如退避等待期間手動停止),
+      // 不會再有事件把 state 收尾,這裡直接標記為 stopped
+      entry.state = 'stopped';
+      this.emitStatus(entry);
+    } else {
       // 無登記表項目 (孤兒),手動廣播 EXIT 讓 UI 同步
       this.broadcast(Channels.execStartServerReply.EXIT, serverId, pid);
     }

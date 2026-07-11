@@ -3,6 +3,7 @@ import ServerPreview from './ServerPreview/ServerPreview';
 import { Badge, Button, IconButton } from '@radix-ui/themes';
 import BootServerButton from './BootServer/BootServerButton';
 import ServerRunningBadge from './ServerRunningBadge/ServerRunningBadge';
+import WatchdogBadge from './WatchdogBadge/WatchdogBadge';
 import RightSectionButton from './ui/RightSectionButton/RightSectionButton';
 import useTranslation from '../../hooks/translation/useTranslation';
 import { useHistory } from 'react-router-dom';
@@ -21,7 +22,10 @@ export default function RightSection() {
     <div className="w-[400px] h-full p-4 bg-bg2 flex flex-col gap-4 relative">
       <ServerPreview />
       <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col gap-4">
-        <ServerRunningBadge />
+        <div className="self-end flex items-center gap-2">
+          <WatchdogBadge />
+          <ServerRunningBadge />
+        </div>
         <RightSectionButton
           onClick={() => {
             history.push('/server-management');

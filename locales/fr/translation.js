@@ -316,7 +316,7 @@ const fr = {
   AdminPasswordDesc: 'Définir un mot de passe administrateur.',
   AutoRestart: 'Auto Restart',
   AutoRestartDesc:
-    'Redémarrez le serveur périodiquement. Rcon doit être activé.',
+    'Redémarre le serveur périodiquement (annonce et sauvegarde avant le redémarrage). Prend effet au prochain démarrage.',
   CrashRestart: 'Redémarrage en cas de crash',
   CrashRestartDesc:
     'Redémarrez le serveur en cas de crash. Nécessite l activation de RCON.',
@@ -445,5 +445,33 @@ const fr = {
   Install: 'Installer',
   OneClickUpdate: 'Mise à jour',
   HowToGetIPAdress: 'Comment obtenir une adresse IP ?',
+  // watchdog
+  Watchdog: 'Chien de garde (redémarrage auto)',
+  WatchdogEnabled: 'Redémarrage après crash',
+  WatchdogEnabledDesc:
+    'Redémarre automatiquement le serveur lorsque son processus plante. Abandonne après plusieurs crashs rapprochés.',
+  WatchdogHangProbe: 'Détection de blocage',
+  WatchdogHangProbeDesc:
+    "Interroge périodiquement l'API REST officielle pour détecter un serveur bloqué et le forcer à redémarrer. RESTAPIEnabled est ajouté automatiquement dans PalWorldSettings.ini au démarrage.",
+  WatchdogMaxRestarts: 'Redémarrages automatiques max',
+  WatchdogMaxRestartsDesc:
+    'Le chien de garde abandonne après ce nombre de redémarrages automatiques en 10 minutes.',
+  RestartSkipIfPlayersOnline:
+    'Reporter le redémarrage planifié si des joueurs sont en ligne',
+  RestartSkipIfPlayersOnlineDesc:
+    "Reporte le redémarrage planifié d'un cycle si des joueurs sont en ligne.",
+  WatchdogStatusProtected: 'Protégé',
+  WatchdogStatusRestarting: 'Redémarrage',
+  WatchdogStatusGaveUp: 'Abandonné',
+  WatchdogStatusUnmonitored: 'Non surveillé',
+  // import local server
+  ImportLocalServer: 'Importer un serveur local',
+  ImportLocalServerDesc:
+    'Choisissez un dossier de serveur dédié Palworld existant (contenant PalServer.exe). Le GUI le gère sur place sans copier les fichiers.',
+  SelectServerFolder: 'Choisir un dossier',
+  ImportServerInvalidPath:
+    'PalServer.exe est introuvable dans le dossier sélectionné.',
+  ImportServerAlreadyImported: 'Ce serveur a déjà été importé.',
+  Import: 'Importer',
 };
 export default fr;

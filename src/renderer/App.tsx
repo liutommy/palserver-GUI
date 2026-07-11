@@ -17,6 +17,7 @@ import useRunServerInstall from './hooks/server/useRunServerInstall';
 import EngineInstallingHint from './components/Home/EngineInstallingHint/EngineInstallingHint';
 import useServerEngineVersion from './hooks/server/useServerEngineVersion';
 import EngineNeedInstall from './components/Home/EngineNeedInstall/EngineNeedInstall';
+import ServerLifecycleListener from './provider/ServerLifecycle/ServerLifecycleListener';
 
 export default function App() {
   // const [hasInstalled, installMessage] = useRunServerInstall();
@@ -26,6 +27,7 @@ export default function App() {
   return (
     <Router>
       <Theme>
+        <ServerLifecycleListener />
         <AlertDialog.Root>
           {/* <ThemePanel /> */}
           <div className="App">

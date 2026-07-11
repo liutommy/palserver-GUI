@@ -304,7 +304,8 @@ const en = {
   ServerPasswordDesc: 'Set a password for the server.',
   AdminPasswordDesc: 'Set an administrator password.',
   AutoRestart: 'Auto Restart',
-  AutoRestartDesc: 'Restart the server periodically. Require Rcon Enabled.',
+  AutoRestartDesc:
+    'Restart the server periodically (announces and saves before restarting). Takes effect on next boot.',
   CrashRestart: 'Crash Restart',
   CrashRestartDesc:
     'Restart the server in case of a crash. Require RCON Enabled.',
@@ -428,5 +429,32 @@ const en = {
   Install: 'Install',
   OneClickUpdate: 'Update',
   HowToGetIPAdress: 'How to get an IP address?',
+  // watchdog
+  Watchdog: 'Watchdog (Auto Restart)',
+  WatchdogEnabled: 'Restart on Crash',
+  WatchdogEnabledDesc:
+    'Automatically restart the server when its process crashes. Gives up after repeated crashes within a short window.',
+  WatchdogHangProbe: 'Hang Detection',
+  WatchdogHangProbeDesc:
+    'Periodically probe the official REST API to detect a frozen server and force-restart it. RESTAPIEnabled is written into PalWorldSettings.ini automatically on boot.',
+  WatchdogMaxRestarts: 'Max Auto Restarts',
+  WatchdogMaxRestartsDesc:
+    'The watchdog gives up after this many automatic restarts within 10 minutes.',
+  RestartSkipIfPlayersOnline: 'Skip Scheduled Restart When Players Online',
+  RestartSkipIfPlayersOnlineDesc:
+    'Postpone the scheduled restart by one cycle if players are online.',
+  WatchdogStatusProtected: 'Protected',
+  WatchdogStatusRestarting: 'Restarting',
+  WatchdogStatusGaveUp: 'Gave Up',
+  WatchdogStatusUnmonitored: 'Unmonitored',
+  // import local server
+  ImportLocalServer: 'Import Local Server',
+  ImportLocalServerDesc:
+    'Pick an existing Palworld dedicated server folder (must contain PalServer.exe). The GUI manages it in place without copying files.',
+  SelectServerFolder: 'Select Folder',
+  ImportServerInvalidPath:
+    'PalServer.exe was not found in the selected folder.',
+  ImportServerAlreadyImported: 'This server has already been imported.',
+  Import: 'Import',
 };
 export default en;

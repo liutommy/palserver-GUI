@@ -18,7 +18,11 @@ export type ImportServerResult =
  */
 ipcMain.handle(
   Channels.importServerInstance,
-  async (event, externalServerPath: string): Promise<ImportServerResult> => {
+  async (
+    event,
+    externalServerPath: string,
+    options?: { validateOnly?: boolean },
+  ): Promise<ImportServerResult> => {
     const normalizedPath = path.resolve(externalServerPath);
 
     // 驗證是有效的伺服器資料夾
@@ -52,6 +56,11 @@ ipcMain.handle(
       }
     } catch (e) {
       // instances 目錄不存在時由 mkdir 建立
+    }
+
+    // 僅驗證 (匯入對話框選完資料夾時的預檢)
+    if (options?.validateOnly) {
+      return { serverId: '' };
     }
 
     const serverId = uniqid('sr-');

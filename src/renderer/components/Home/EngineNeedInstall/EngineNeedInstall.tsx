@@ -196,14 +196,26 @@ export default function EngineNeedInstall() {
                 </Button>
               </AlertDialog.Cancel>
             ) : (
-              <AlertDialog.Action>
-                <Button
-                  onClick={runServerReInstall}
-                  loading={serverEngineStartInstall}
-                >
-                  {t('Fix')}
-                </Button>
-              </AlertDialog.Action>
+              <>
+                {/* 只匯入外部伺服器的使用者不需要安裝內建引擎,允許跳過 */}
+                <AlertDialog.Cancel>
+                  <Button
+                    onClick={() => setOpenDialog(false)}
+                    color="gray"
+                    variant="soft"
+                  >
+                    {t('Close')}
+                  </Button>
+                </AlertDialog.Cancel>
+                <AlertDialog.Action>
+                  <Button
+                    onClick={runServerReInstall}
+                    loading={serverEngineStartInstall}
+                  >
+                    {t('Fix')}
+                  </Button>
+                </AlertDialog.Action>
+              </>
             ))}
           {engineNeedInstall &&
             (serverEnginehasInstall ? (
@@ -213,14 +225,26 @@ export default function EngineNeedInstall() {
                 </Button>
               </AlertDialog.Cancel>
             ) : (
-              <AlertDialog.Action>
-                <Button
-                  onClick={runServerInstall}
-                  loading={serverEngineStartInstall}
-                >
-                  {t('Install')}
-                </Button>
-              </AlertDialog.Action>
+              <>
+                {/* 只匯入外部伺服器的使用者不需要安裝內建引擎,允許跳過 */}
+                <AlertDialog.Cancel>
+                  <Button
+                    onClick={() => setOpenDialog(false)}
+                    color="gray"
+                    variant="soft"
+                  >
+                    {t('Close')}
+                  </Button>
+                </AlertDialog.Cancel>
+                <AlertDialog.Action>
+                  <Button
+                    onClick={runServerInstall}
+                    loading={serverEngineStartInstall}
+                  >
+                    {t('Install')}
+                  </Button>
+                </AlertDialog.Action>
+              </>
             ))}
           {engineNeedUpdate && (
             <AlertDialog.Cancel>

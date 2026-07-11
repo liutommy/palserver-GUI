@@ -402,53 +402,97 @@ export default function ServerSettings() {
       //   value: false,
       // },
     },
-    // Restart: {
-    //   AutoRestart: {
-    //     disabled: isServerRunning,
-    //     id: 'AutoRestart',
-    //     title: t('AutoRestart'),
-    //     desciption: t('AutoRestartDesc'),
-    //     type: 'options',
-    //     values: [0, 6, 12, 24],
-    //     labels: [
-    //       t('SwitchOff'),
-    //       '6 ' + t('HourPerTime'),
-    //       '12 ' + t('HourPerTime'),
-    //       '24 ' + t('HourPerTime'),
-    //     ],
-    //     value: serverInfo?.AutoRestart,
-    //     onValueChange(v) {
-    //       setServerInfo({
-    //         ...serverInfo!,
-    //         AutoRestart: v,
-    //       });
-    //     },
-    //   },
-    //   CrashRestart: {
-    //     id: 'CrashRestart',
-    //     title: t('CrashRestart'),
-    //     desciption: t('CrashRestartDesc'),
-    //     value: serverInfo?.CrashRestart,
-    //     onValueChange(v) {
-    //       setServerInfo({
-    //         ...serverInfo!,
-    //         CrashRestart: v,
-    //       });
-    //     },
-    //   },
-    //   // OverRamRestart: {
-    //   //   id: 'OverRamRestart',
-    //   //   title: t('OverRamRestart'),
-    //   //   desciption: t('OverRamRestartDesc'),
-    //   //   value: serverInfo?.OverRamRestart,
-    //   //   onValueChange(v) {
-    //   //     setServerInfo({
-    //   //       ...serverInfo!,
-    //   //       OverRamRestart: v,
-    //   //     });
-    //   //   },
-    //   // },
-    // },
+    Watchdog: {
+      WatchdogEnabled: {
+        id: 'WatchdogEnabled',
+        title: t('WatchdogEnabled'),
+        desciption: t('WatchdogEnabledDesc'),
+        value: serverInfo?.WatchdogEnabled ?? true,
+        onValueChange(v) {
+          setServerInfo({
+            ...serverInfo!,
+            WatchdogEnabled: v,
+          });
+        },
+      },
+      WatchdogHangProbe: {
+        hidden: !(serverInfo?.WatchdogEnabled ?? true),
+        id: 'WatchdogHangProbe',
+        title: t('WatchdogHangProbe'),
+        desciption: t('WatchdogHangProbeDesc'),
+        value: serverInfo?.WatchdogHangProbe ?? true,
+        onValueChange(v) {
+          setServerInfo({
+            ...serverInfo!,
+            WatchdogHangProbe: v,
+          });
+        },
+      },
+      WatchdogMaxRestarts: {
+        hidden: !(serverInfo?.WatchdogEnabled ?? true),
+        id: 'WatchdogMaxRestarts',
+        title: t('WatchdogMaxRestarts'),
+        desciption: t('WatchdogMaxRestartsDesc'),
+        type: 'options',
+        values: ['1', '3', '5', '10'],
+        labels: ['1', '3', '5', '10'],
+        value: String(serverInfo?.WatchdogMaxRestarts ?? 3),
+        onValueChange(v) {
+          setServerInfo({
+            ...serverInfo!,
+            WatchdogMaxRestarts: Number(v),
+          });
+        },
+      },
+      AutoRestart: {
+        disabled: isServerRunning,
+        id: 'AutoRestart',
+        title: t('AutoRestart'),
+        desciption: t('AutoRestartDesc'),
+        type: 'options',
+        values: ['0', '2', '4', '6', '12', '24'],
+        labels: [
+          t('SwitchOff'),
+          `2 ${t('HourPerTime')}`,
+          `4 ${t('HourPerTime')}`,
+          `6 ${t('HourPerTime')}`,
+          `12 ${t('HourPerTime')}`,
+          `24 ${t('HourPerTime')}`,
+        ],
+        value: String(serverInfo?.AutoRestart ?? 0),
+        onValueChange(v) {
+          setServerInfo({
+            ...serverInfo!,
+            AutoRestart: Number(v),
+          });
+        },
+      },
+      RestartSkipIfPlayersOnline: {
+        hidden: !(serverInfo?.AutoRestart ?? 0),
+        id: 'RestartSkipIfPlayersOnline',
+        title: t('RestartSkipIfPlayersOnline'),
+        desciption: t('RestartSkipIfPlayersOnlineDesc'),
+        value: serverInfo?.RestartSkipIfPlayersOnline ?? true,
+        onValueChange(v) {
+          setServerInfo({
+            ...serverInfo!,
+            RestartSkipIfPlayersOnline: v,
+          });
+        },
+      },
+      OverRamRestart: {
+        id: 'OverRamRestart',
+        title: t('OverRamRestart'),
+        desciption: t('OverRamRestartDesc'),
+        value: serverInfo?.OverRamRestart ?? false,
+        onValueChange(v) {
+          setServerInfo({
+            ...serverInfo!,
+            OverRamRestart: v,
+          });
+        },
+      },
+    },
     Process: {
       UseIndependentProcess: {
         disabled: isServerRunning,

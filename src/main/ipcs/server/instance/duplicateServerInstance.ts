@@ -22,6 +22,19 @@ ipcMain.handle(
 
     const newInstancePath = path.join(USER_SERVER_INSTANCES_PATH, newServerId);
 
+    // 讀取舊實體設定 (.pal)
+    const prevdServerInstanceSettingPath = path.join(oldInstancePath, '.pal');
+
+    const prevServerInstanceSettingJson = JSON.parse(
+      await fs.readFile(prevdServerInstanceSettingPath, { encoding: 'utf-8' }),
+    );
+
+    // 外部匯入的實體不支援複製 — 複製出的第二個實體會與原實體
+    // 搶同一個伺服器資料夾,造成重複開服
+    if (prevServerInstanceSettingJson.ExternalServerPath) {
+      return null;
+    }
+
     /**
      ** === 複製伺服器 ===
      */
@@ -37,12 +50,6 @@ ipcMain.handle(
      */
 
     // 寫入實體設置檔 (.pal)
-
-    const prevdServerInstanceSettingPath = path.join(oldInstancePath, '.pal');
-
-    const prevServerInstanceSettingJson = JSON.parse(
-      await fs.readFile(prevdServerInstanceSettingPath, { encoding: 'utf-8' }),
-    );
 
     const serverInstanceSettingPath = path.join(newInstancePath, '.pal');
     const serverInstanceSettingJson: ServerInstanceSetting = {
