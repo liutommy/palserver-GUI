@@ -79,9 +79,14 @@ ipcMain.handle(
       performanceOptimizationEnabled: false,
       performanceMonitorEnabled: false,
       performanceMonitorAnimationEnabled: true,
-      // 外部伺服器預設不注入任何模組
-      ue4ssEnabled: false,
-      palguardEnabled: false,
+      // 依外部伺服器現況偵測模組載入器 — 若人家本來就裝了 UE4SS/PalDefender,
+      // 預設 false 會在開服時把 dll 改名停用,悄悄破壞既有模組
+      ue4ssEnabled: fsc.existsSync(
+        path.join(normalizedPath, 'Pal/Binaries/Win64/UE4SS.dll'),
+      ),
+      palguardEnabled: fsc.existsSync(
+        path.join(normalizedPath, 'Pal/Binaries/Win64/PalDefender.dll'),
+      ),
       modManagementEnabled: false,
       AutoRestart: 0,
       CrashRestart: false,

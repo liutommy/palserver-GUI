@@ -48,6 +48,8 @@ type WatchdogConfig = {
 
 type ManagedServer = {
   serverId: string;
+  /** 每次 start() 遞增 — 舊生命週期的延遲回呼 (close 事件、逾時補刀) 不得影響新一代 */
+  generation: number;
   child: ChildProcess | null;
   launcherPid: number | null;
   shippingPid: number | null;
@@ -90,6 +92,7 @@ class ServerProcessManager {
   private createEntry(serverId: string): ManagedServer {
     return {
       serverId,
+      generation: 0,
       child: null,
       launcherPid: null,
       shippingPid: null,
@@ -210,6 +213,7 @@ class ServerProcessManager {
       this.servers.set(serverId, entry);
     }
 
+    entry.generation += 1;
     entry.queryPort = queryPort;
     entry.serverPath = resolveServerPath(serverId);
     entry.userStop = false;
@@ -232,7 +236,12 @@ class ServerProcessManager {
     try {
       await this.launch(entry);
     } catch (e) {
-      // .pal / ini 損毀等例外:不讓 state 卡在 starting
+      // .pal / ini 損毀等例外:不讓 state 卡在 starting;
+      // 若 spawn 之後才拋錯,把已啟動的 child 收掉避免孤兒
+      if (entry.child?.pid) {
+        await killTree(entry.child.pid);
+      }
+      entry.child = null;
       entry.state = 'stopped';
       entry.terminatedHandled = true;
       this.emitStatus(entry);
@@ -310,8 +319,13 @@ class ServerProcessManager {
       this.emitStatus(entry);
     });
 
-    // exit / close / error 可能重複觸發,handleTermination 內部去重
-    const onDead = () => this.handleTermination(entry);
+    // exit / close / error 可能重複觸發,handleTermination 內部去重;
+    // 重啟後舊 child 延遲觸發的 close/error 不得影響新一代的生命週期
+    const generationAtLaunch = entry.generation;
+    const onDead = () => {
+      if (entry.generation !== generationAtLaunch) return;
+      this.handleTermination(entry);
+    };
     child.on('exit', onDead);
     child.on('close', onDead);
     child.on('error', onDead);
@@ -387,7 +401,11 @@ class ServerProcessManager {
       }
 
       await this.handleCrash(entry, config);
-    })().catch(() => {});
+    })().catch(() => {
+      // .pal 損毀等例外:不讓 state 卡在 running/restarting
+      entry.state = 'stopped';
+      this.emitStatus(entry);
+    });
   }
 
   private async handleCrash(entry: ManagedServer, config: WatchdogConfig) {
@@ -495,12 +513,15 @@ class ServerProcessManager {
       entry.probeFailStreak += 1;
       if (entry.probeFailStreak >= PROBE_FAIL_LIMIT) {
         // 程序活著但 REST 連續無回應 → 判定掛起,強制終止後由 exit 流程重啟
+        const generationAtHang = entry.generation;
         entry.lastEvent = 'hang';
         entry.lastEventAt = Date.now();
         entry.probeFailStreak = 0;
         if (entry.launcherPid) {
           await killTree(entry.launcherPid);
         }
+        // killTree 之後 exit 流程可能已開始重啟 — 不可清掃到新一代
+        if (entry.generation !== generationAtHang) return;
         try {
           await sweepServerProcesses(entry.serverPath);
         } catch (err) {
@@ -560,6 +581,9 @@ class ServerProcessManager {
     entry.lastEventAt = Date.now();
     this.emitStatus(entry);
 
+    const generationAtShutdown = entry.generation;
+    const pidAtShutdown = entry.launcherPid;
+
     const delivered = await this.gracefulShutdown(
       entry.serverId,
       30,
@@ -567,11 +591,18 @@ class ServerProcessManager {
     );
     if (!delivered) {
       // 關機指令送不出去 (REST/RCON 都不可用) → 直接強制終止
-      if (entry.launcherPid) await killTree(entry.launcherPid);
+      if (pidAtShutdown) await killTree(pidAtShutdown);
       return;
     }
     await sleep(GRACEFUL_EXIT_WAIT_MS);
-    if (!entry.terminatedHandled && entry.launcherPid) {
+    // 補刀只針對發出關機指令當下的那一代與那個 PID —
+    // 正常情況下伺服器早已退出並重啟完成,絕不可誤殺新實例
+    if (
+      entry.generation === generationAtShutdown &&
+      !entry.terminatedHandled &&
+      entry.launcherPid !== null &&
+      entry.launcherPid === pidAtShutdown
+    ) {
       await killTree(entry.launcherPid);
     }
   }
@@ -585,7 +616,13 @@ class ServerProcessManager {
     waittimeSec: number,
     message: string,
   ): Promise<boolean> {
-    const worldSettings = await getWorldSettingsByServerId(serverId);
+    let worldSettings: any;
+    try {
+      worldSettings = await getWorldSettingsByServerId(serverId);
+    } catch (e) {
+      // ini 損毀時退化為強制終止路徑,不讓呼叫端 (stop/重啟) 卡死
+      return false;
+    }
 
     if (worldSettings.RESTAPIEnabled === true) {
       try {
@@ -674,6 +711,7 @@ class ServerProcessManager {
     }
 
     const pid = entry?.launcherPid ?? fallbackPid ?? null;
+    const generationAtStop = entry?.generation ?? -1;
     const delivered = await this.gracefulShutdown(
       serverId,
       1,
@@ -684,6 +722,7 @@ class ServerProcessManager {
       // 等待伺服器自行退出 (含存檔時間),最多 30 秒
       const deadline = Date.now() + 30000;
       while (Date.now() < deadline) {
+        if (entry && entry.generation !== generationAtStop) return;
         if (entry?.terminatedHandled) break;
         if (!entry) {
           // GUI 重啟後的孤兒:收不到 exit 事件,改輪詢程序是否還在
@@ -693,6 +732,10 @@ class ServerProcessManager {
         await sleep(2000);
       }
     }
+
+    // 舊實例退出後使用者可能立刻又按了啟動 —
+    // 此時絕不可執行後面的強殺/清掃,否則會殺掉剛啟動的新實例
+    if (entry && entry.generation !== generationAtStop) return;
 
     if ((!entry || !entry.terminatedHandled) && pid) {
       await killTree(pid);
@@ -704,6 +747,7 @@ class ServerProcessManager {
     }
 
     if (entry) {
+      if (entry.generation !== generationAtStop) return;
       // 若 exit 事件已在崩潰流程中處理過 (例如退避等待期間手動停止),
       // 不會再有事件把 state 收尾,這裡直接標記為 stopped
       entry.state = 'stopped';
