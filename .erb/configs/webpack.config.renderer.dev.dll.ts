@@ -31,7 +31,11 @@ const configuration: webpack.Configuration = {
   module: require('./webpack.config.renderer.dev').default.module,
 
   entry: {
-    renderer: Object.keys(dependencies || {}),
+    // firebase v9+ has no root "." export (subpath imports only) and
+    // palserver-gui is a self-reference — both break the DLL bundle.
+    renderer: Object.keys(dependencies || {}).filter(
+      (name) => !['firebase', 'palserver-gui'].includes(name)
+    ),
   },
 
   output: {
