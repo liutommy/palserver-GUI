@@ -32,9 +32,12 @@ import './server/exec/execShutdownServer';
 
 // watchdog
 import './server/watchdog/getWatchdogStatus';
+import './server/watchdog/getRunningServers';
 
 // log
 import './server/log/getServerLog';
+import './server/log/getConsoleLog';
+import './server/log/getCrashDumps';
 
 // rcon / rest
 import './server/rest/sendRestAPI';

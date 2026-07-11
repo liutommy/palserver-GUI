@@ -24,6 +24,7 @@ const Channels = {
   watchdogStatusReply: {
     DATA: 'watchdog-status:data',
   },
+  getRunningServers: 'get-running-servers',
   // 伺服器實體
   createServerInstance: 'create-server-instance',
   importServerInstance: 'import-server-instance',
@@ -54,6 +55,8 @@ const Channels = {
   getServerLogReply: {
     DATA: 'get-server-log:data',
   },
+  getConsoleLog: 'get-console-log',
+  getCrashDumps: 'get-crash-dumps',
   // REST
   sendRestAPI: 'send-rest-api',
   // RCON
@@ -65,6 +68,9 @@ const Channels = {
   // update
   updatePalguard: 'update-palguard',
   updateUE4SS: 'update-ue4ss',
+  // app
+  getLoginItem: 'get-login-item',
+  setLoginItem: 'set-login-item',
   // cache
   clearSystemCache: 'clear-system-cache',
   // mods

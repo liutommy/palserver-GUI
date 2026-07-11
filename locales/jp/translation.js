@@ -444,6 +444,33 @@ const jp = {
     '選択したフォルダに PalServer.exe が見つかりません。',
   ImportServerAlreadyImported: 'このサーバーは既にインポートされています。',
   Import: 'インポート',
+  // notifications
+  Notifications: '通知',
+  NotifyDesktopEnabled: 'デスクトップ通知',
+  NotifyDesktopEnabledDesc:
+    'クラッシュ再起動・再起動中止などのウォッチドッグイベント発生時に Windows 通知を表示します。',
+  NotifyDiscordWebhook: 'Discord Webhook',
+  NotifyDiscordWebhookDesc:
+    'ウォッチドッグイベントをこの Discord Webhook URL に送信します。空欄で無効。',
+  // backup
+  BackupOnRestart: '再起動前の自動バックアップ',
+  BackupOnRestartDesc:
+    '自動再起動の前に SaveGames をバックアップします（最新 10 件を保持）。',
+  OpenBackupFolder: 'バックアップフォルダ',
+  OpenBackupFolderDesc: '自動バックアップの保存先を開きます。',
+  // autostart
+  AutoStartOnLaunch: 'GUI 起動時に自動開始',
+  AutoStartOnLaunchDesc:
+    'palserver-GUI の起動時にこのサーバーを自動的に開始します。「PC 起動時に自動実行」と併用すると無人運用が可能です。',
+  StartOnBoot: 'PC 起動時に自動実行',
+  StartOnBootDesc:
+    'Windows ログイン時に palserver-GUI をタスクトレイで起動します。',
+  // log viewer
+  LogSourceConsole: 'サーバーコンソール',
+  LogSourcePalguard: 'PalDefender ログ',
+  LogSourceCrashes: 'クラッシュ記録',
+  OpenCrashFolder: 'クラッシュフォルダを開く',
+  NoCrashDumps: 'クラッシュ記録はありません。',
 };
 
 export default jp;

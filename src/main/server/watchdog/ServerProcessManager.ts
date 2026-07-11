@@ -25,6 +25,8 @@ import {
   sweepServerProcesses,
 } from './processUtils';
 import restRequest from './restClient';
+import notifyWatchdogEvent from './notifier';
+import backupSaveGames from './backupSaves';
 
 const PROBE_INTERVAL_MS = 30 * 1000;
 const PROBE_TIMEOUT_MS = 5 * 1000;
@@ -389,6 +391,13 @@ class ServerProcessManager {
         } catch (e) {
           //
         }
+        // 伺服器已完全停止 — 重啟前備份存檔的最佳時機
+        try {
+          await backupSaveGames(entry.serverId);
+        } catch (e) {
+          //
+        }
+        if (entry.userStop) return;
         await this.start(entry.serverId, entry.queryPort, 'watchdog');
         return;
       }
@@ -429,12 +438,22 @@ class ServerProcessManager {
       entry.state = 'stopped';
       entry.lastEvent = 'gave-up';
       this.emitStatus(entry);
+      notifyWatchdogEvent(
+        entry.serverId,
+        `⛔ Watchdog gave up after ${config.maxRestarts} restarts within 10 minutes — manual attention required.`,
+      ).catch(() => {});
       return;
     }
     entry.restartTimestamps.push(now);
     entry.restartCount += 1;
     entry.state = 'restarting';
     this.emitStatus(entry);
+    notifyWatchdogEvent(
+      entry.serverId,
+      entry.lastEvent === 'hang'
+        ? `🟠 Server unresponsive — force restarting (${entry.restartTimestamps.length}/${config.maxRestarts}).`
+        : `🔴 Server crashed — auto restarting (${entry.restartTimestamps.length}/${config.maxRestarts}).`,
+    ).catch(() => {});
 
     const backoff =
       RESTART_BACKOFFS_MS[
@@ -450,6 +469,14 @@ class ServerProcessManager {
     } catch (e) {
       //
     }
+    // 崩潰後、重啟前備份存檔 (伺服器已停止,檔案穩定)
+    try {
+      await backupSaveGames(entry.serverId);
+    } catch (e) {
+      //
+    }
+    if (entry.userStop) return;
+    if (entry.state === 'starting' || entry.state === 'running') return;
     await this.start(entry.serverId, entry.queryPort, 'watchdog');
   }
 
@@ -580,6 +607,12 @@ class ServerProcessManager {
     entry.lastEvent = reason;
     entry.lastEventAt = Date.now();
     this.emitStatus(entry);
+    notifyWatchdogEvent(
+      entry.serverId,
+      reason === 'ram'
+        ? '🟡 Memory limit exceeded — graceful restart starting.'
+        : '🔵 Scheduled restart starting.',
+    ).catch(() => {});
 
     const generationAtShutdown = entry.generation;
     const pidAtShutdown = entry.launcherPid;
@@ -756,6 +789,29 @@ class ServerProcessManager {
       // 無登記表項目 (孤兒),手動廣播 EXIT 讓 UI 同步
       this.broadcast(Channels.execStartServerReply.EXIT, serverId, pid);
     }
+  }
+
+  /**
+   * 目前執行中的伺服器清單 — 供剛載入 / 重新整理的 renderer 重建 redux 狀態,
+   * 也涵蓋自動開服發生在視窗載入之前的情境。
+   */
+  getRunningServers(): {
+    serverId: string;
+    processId: number;
+    queryPort: number;
+  }[] {
+    const list: { serverId: string; processId: number; queryPort: number }[] =
+      [];
+    this.servers.forEach((entry) => {
+      if (entry.state === 'starting' || entry.state === 'running') {
+        list.push({
+          serverId: entry.serverId,
+          processId: entry.launcherPid ?? 0,
+          queryPort: entry.queryPort,
+        });
+      }
+    });
+    return list;
   }
 
   private clearProbeTimer(entry: ManagedServer) {

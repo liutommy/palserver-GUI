@@ -100,6 +100,10 @@ ipcMain.handle(
       WatchdogMaxRestarts: 3,
       WatchdogStartupGraceSec: 180,
       RestartSkipIfPlayersOnline: true,
+      NotifyDesktopEnabled: true,
+      NotifyDiscordWebhook: '',
+      BackupOnRestart: true,
+      AutoStartOnLaunch: false,
     };
 
     await fs.writeFile(

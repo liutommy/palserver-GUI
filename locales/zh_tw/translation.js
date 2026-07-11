@@ -444,6 +444,32 @@ const zh_tw = {
   ImportServerInvalidPath: '所選資料夾中找不到 PalServer.exe。',
   ImportServerAlreadyImported: '這個伺服器已經匯入過了。',
   Import: '匯入',
+  // notifications
+  Notifications: '通知',
+  NotifyDesktopEnabled: '桌面通知',
+  NotifyDesktopEnabledDesc:
+    '崩潰重啟、放棄重啟等看門狗事件發生時顯示 Windows 通知。',
+  NotifyDiscordWebhook: 'Discord Webhook',
+  NotifyDiscordWebhookDesc:
+    '填入 Discord Webhook 網址，看門狗事件會發送到該頻道。留空表示停用。',
+  // backup
+  BackupOnRestart: '重啟前自動備份',
+  BackupOnRestartDesc:
+    '看門狗自動重啟前備份 SaveGames 存檔（保留最近 10 份）。',
+  OpenBackupFolder: '備份資料夾',
+  OpenBackupFolderDesc: '檢視自動備份的存檔壓縮檔。',
+  // autostart
+  AutoStartOnLaunch: '隨 GUI 自動開服',
+  AutoStartOnLaunchDesc:
+    'palserver-GUI 啟動時自動啟動此伺服器。搭配「開機自動啟動」可達成無人值守。',
+  StartOnBoot: '開機自動啟動',
+  StartOnBootDesc: 'Windows 登入時自動在系統匣啟動 palserver-GUI。',
+  // log viewer
+  LogSourceConsole: '伺服器主控台',
+  LogSourcePalguard: 'PalDefender 日誌',
+  LogSourceCrashes: '崩潰紀錄',
+  OpenCrashFolder: '開啟崩潰資料夾',
+  NoCrashDumps: '沒有崩潰紀錄。',
 };
 
 export default zh_tw;

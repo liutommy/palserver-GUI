@@ -473,5 +473,32 @@ const fr = {
     'PalServer.exe est introuvable dans le dossier sélectionné.',
   ImportServerAlreadyImported: 'Ce serveur a déjà été importé.',
   Import: 'Importer',
+  // notifications
+  Notifications: 'Notifications',
+  NotifyDesktopEnabled: 'Notifications de bureau',
+  NotifyDesktopEnabledDesc:
+    'Affiche une notification Windows lors des événements du chien de garde (redémarrage après crash, abandon, etc.).',
+  NotifyDiscordWebhook: 'Webhook Discord',
+  NotifyDiscordWebhookDesc:
+    'Les événements du chien de garde sont envoyés à cette URL de webhook Discord. Laisser vide pour désactiver.',
+  // backup
+  BackupOnRestart: 'Sauvegarde avant redémarrage',
+  BackupOnRestartDesc:
+    'Sauvegarde SaveGames avant chaque redémarrage automatique (conserve les 10 dernières).',
+  OpenBackupFolder: 'Dossier de sauvegardes',
+  OpenBackupFolderDesc: 'Parcourir les sauvegardes automatiques.',
+  // autostart
+  AutoStartOnLaunch: 'Démarrer avec le GUI',
+  AutoStartOnLaunchDesc:
+    "Démarre ce serveur automatiquement au lancement de palserver-GUI. À combiner avec « Lancer au démarrage » pour un fonctionnement sans surveillance.",
+  StartOnBoot: 'Lancer au démarrage',
+  StartOnBootDesc:
+    'Lance palserver-GUI dans la zone de notification au démarrage de Windows.',
+  // log viewer
+  LogSourceConsole: 'Console du serveur',
+  LogSourcePalguard: 'Journal PalDefender',
+  LogSourceCrashes: 'Rapports de crash',
+  OpenCrashFolder: 'Ouvrir le dossier des crashs',
+  NoCrashDumps: 'Aucun rapport de crash.',
 };
 export default fr;

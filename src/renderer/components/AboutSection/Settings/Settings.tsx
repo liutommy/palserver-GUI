@@ -1,5 +1,5 @@
-import { AlertDialog, Button, Flex, Select } from '@radix-ui/themes';
-import React from 'react';
+import { AlertDialog, Button, Flex, Select, Switch } from '@radix-ui/themes';
+import React, { useEffect, useState } from 'react';
 import { MdCoffee, MdSettings } from 'react-icons/md';
 import useTranslation from '../../../hooks/translation/useTranslation';
 import _ from 'lodash';
@@ -15,6 +15,14 @@ import { SERVER_URL } from '../../../../constant/app';
 export default function Settings() {
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();
+
+  const [startOnBoot, setStartOnBoot] = useState(false);
+  useEffect(() => {
+    window.electron.ipcRenderer
+      .invoke(Channels.getLoginItem)
+      .then((enabled: boolean) => setStartOnBoot(Boolean(enabled)))
+      .catch(() => {});
+  }, []);
 
   const settings = {
     Language: {
@@ -47,6 +55,21 @@ export default function Settings() {
 
     //   },
     // },
+    StartOnBoot: {
+      id: 'StartOnBoot',
+      title: t('StartOnBoot'),
+      description: t('StartOnBootDesc'),
+      type: 'switch',
+      value: startOnBoot,
+      async onValueChange(enabled: boolean) {
+        setStartOnBoot(enabled);
+        const actual = await window.electron.ipcRenderer.invoke(
+          Channels.setLoginItem,
+          enabled,
+        );
+        setStartOnBoot(Boolean(actual));
+      },
+    },
     ServerInstancePath: {
       id: 'ServerInstancePath',
       title: t('ServerInstancePath'),
@@ -206,6 +229,9 @@ const SettingsItem = ({
         <Button color="yellow" onClick={onButtonClick}>
           {buttonText}
         </Button>
+      )}
+      {type === 'switch' && (
+        <Switch checked={value} onCheckedChange={onValueChange} />
       )}
     </div>
   );

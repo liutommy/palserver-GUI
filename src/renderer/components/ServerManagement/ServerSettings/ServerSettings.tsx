@@ -492,6 +492,75 @@ export default function ServerSettings() {
           });
         },
       },
+      BackupOnRestart: {
+        id: 'BackupOnRestart',
+        title: t('BackupOnRestart'),
+        desciption: t('BackupOnRestartDesc'),
+        value: serverInfo?.BackupOnRestart ?? true,
+        onValueChange(v) {
+          setServerInfo({
+            ...serverInfo!,
+            BackupOnRestart: v,
+          });
+        },
+      },
+      OpenBackupFolder: {
+        id: 'OpenBackupFolder',
+        title: t('OpenBackupFolder'),
+        desciption: t('OpenBackupFolderDesc'),
+        type: 'button',
+        buttonText: t('Open'),
+        action() {
+          window.electron.openExplorer(
+            window.electron.node
+              .path()
+              .join(
+                window.electron.constant.USER_SERVER_INSTANCES_PATH(),
+                selectedServerInstance,
+                'backups',
+              ),
+          );
+        },
+      },
+      AutoStartOnLaunch: {
+        id: 'AutoStartOnLaunch',
+        title: t('AutoStartOnLaunch'),
+        desciption: t('AutoStartOnLaunchDesc'),
+        value: serverInfo?.AutoStartOnLaunch ?? false,
+        onValueChange(v) {
+          setServerInfo({
+            ...serverInfo!,
+            AutoStartOnLaunch: v,
+          });
+        },
+      },
+    },
+    Notifications: {
+      NotifyDesktopEnabled: {
+        id: 'NotifyDesktopEnabled',
+        title: t('NotifyDesktopEnabled'),
+        desciption: t('NotifyDesktopEnabledDesc'),
+        value: serverInfo?.NotifyDesktopEnabled ?? true,
+        onValueChange(v) {
+          setServerInfo({
+            ...serverInfo!,
+            NotifyDesktopEnabled: v,
+          });
+        },
+      },
+      NotifyDiscordWebhook: {
+        id: 'NotifyDiscordWebhook',
+        title: t('NotifyDiscordWebhook'),
+        desciption: t('NotifyDiscordWebhookDesc'),
+        type: 'input',
+        value: serverInfo?.NotifyDiscordWebhook ?? '',
+        onValueChange(v) {
+          setServerInfo({
+            ...serverInfo!,
+            NotifyDiscordWebhook: v,
+          });
+        },
+      },
     },
     Process: {
       UseIndependentProcess: {

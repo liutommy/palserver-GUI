@@ -27,4 +27,11 @@ export type ServerInstanceSetting = {
   readonly WatchdogMaxRestarts?: number;
   readonly WatchdogStartupGraceSec?: number;
   readonly RestartSkipIfPlayersOnline?: boolean;
+  /** watchdog 事件通知 */
+  readonly NotifyDesktopEnabled?: boolean;
+  readonly NotifyDiscordWebhook?: string;
+  /** 自動重啟前備份 SaveGames */
+  readonly BackupOnRestart?: boolean;
+  /** GUI 啟動時自動開服 (搭配開機自啟達成無人值守) */
+  readonly AutoStartOnLaunch?: boolean;
 };

@@ -420,5 +420,31 @@ const zh_cn = {
   ImportServerInvalidPath: '所选文件夹中找不到 PalServer.exe。',
   ImportServerAlreadyImported: '这个服务器已经导入过了。',
   Import: '导入',
+  // notifications
+  Notifications: '通知',
+  NotifyDesktopEnabled: '桌面通知',
+  NotifyDesktopEnabledDesc:
+    '崩溃重启、放弃重启等看门狗事件发生时显示 Windows 通知。',
+  NotifyDiscordWebhook: 'Discord Webhook',
+  NotifyDiscordWebhookDesc:
+    '填入 Discord Webhook 网址，看门狗事件会发送到该频道。留空表示停用。',
+  // backup
+  BackupOnRestart: '重启前自动备份',
+  BackupOnRestartDesc:
+    '看门狗自动重启前备份 SaveGames 存档（保留最近 10 份）。',
+  OpenBackupFolder: '备份文件夹',
+  OpenBackupFolderDesc: '查看自动备份的存档压缩文件。',
+  // autostart
+  AutoStartOnLaunch: '随 GUI 自动开服',
+  AutoStartOnLaunchDesc:
+    'palserver-GUI 启动时自动启动此服务器。搭配「开机自动启动」可实现无人值守。',
+  StartOnBoot: '开机自动启动',
+  StartOnBootDesc: 'Windows 登录时自动在系统托盘启动 palserver-GUI。',
+  // log viewer
+  LogSourceConsole: '服务器控制台',
+  LogSourcePalguard: 'PalDefender 日志',
+  LogSourceCrashes: '崩溃记录',
+  OpenCrashFolder: '打开崩溃文件夹',
+  NoCrashDumps: '没有崩溃记录。',
 };
 export default zh_cn;

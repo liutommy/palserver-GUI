@@ -456,5 +456,32 @@ const en = {
     'PalServer.exe was not found in the selected folder.',
   ImportServerAlreadyImported: 'This server has already been imported.',
   Import: 'Import',
+  // notifications
+  Notifications: 'Notifications',
+  NotifyDesktopEnabled: 'Desktop Notifications',
+  NotifyDesktopEnabledDesc:
+    'Show a Windows notification on watchdog events (crash restart, gave up, etc.).',
+  NotifyDiscordWebhook: 'Discord Webhook',
+  NotifyDiscordWebhookDesc:
+    'Watchdog events are posted to this Discord webhook URL. Leave empty to disable.',
+  // backup
+  BackupOnRestart: 'Backup Before Restart',
+  BackupOnRestartDesc:
+    'Back up SaveGames before every automatic restart (keeps the latest 10).',
+  OpenBackupFolder: 'Backup Folder',
+  OpenBackupFolderDesc: 'Browse the automatic save backups.',
+  // autostart
+  AutoStartOnLaunch: 'Start With GUI',
+  AutoStartOnLaunchDesc:
+    'Start this server automatically when palserver-GUI launches. Combine with "Start on Boot" for unattended uptime.',
+  StartOnBoot: 'Start on Boot',
+  StartOnBootDesc:
+    'Launch palserver-GUI in the system tray when Windows starts.',
+  // log viewer
+  LogSourceConsole: 'Server Console',
+  LogSourcePalguard: 'PalDefender Log',
+  LogSourceCrashes: 'Crash Dumps',
+  OpenCrashFolder: 'Open Crash Folder',
+  NoCrashDumps: 'No crash dumps.',
 };
 export default en;
