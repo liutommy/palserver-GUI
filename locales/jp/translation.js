@@ -435,6 +435,7 @@ const jp = {
   WatchdogStatusRestarting: '再起動中',
   WatchdogStatusGaveUp: '再起動中止',
   WatchdogStatusUnmonitored: '監視なし',
+  WatchdogStatusExternal: '外部で実行中',
   // import local server
   ImportLocalServer: 'ローカルサーバーをインポート',
   ImportLocalServerDesc:

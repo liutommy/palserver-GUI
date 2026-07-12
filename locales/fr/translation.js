@@ -464,6 +464,7 @@ const fr = {
   WatchdogStatusRestarting: 'Redémarrage',
   WatchdogStatusGaveUp: 'Abandonné',
   WatchdogStatusUnmonitored: 'Non surveillé',
+  WatchdogStatusExternal: 'Exécution externe',
   // import local server
   ImportLocalServer: 'Importer un serveur local',
   ImportLocalServerDesc:

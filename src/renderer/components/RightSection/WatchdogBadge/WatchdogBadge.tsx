@@ -38,8 +38,14 @@ export default function WatchdogBadge() {
 
   if (!status) return null;
 
-  let badge: { color: 'grass' | 'amber' | 'red' | 'gray'; label: string };
+  let badge: {
+    color: 'grass' | 'amber' | 'red' | 'gray' | 'orange';
+    label: string;
+  };
   switch (status.state) {
+    case 'external':
+      badge = { color: 'orange', label: t('WatchdogStatusExternal') };
+      break;
     case 'protected':
       badge = { color: 'grass', label: t('WatchdogStatusProtected') };
       break;

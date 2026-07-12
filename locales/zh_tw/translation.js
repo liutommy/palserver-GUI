@@ -436,6 +436,7 @@ const zh_tw = {
   WatchdogStatusRestarting: '重啟中',
   WatchdogStatusGaveUp: '已放棄重啟',
   WatchdogStatusUnmonitored: '未受監控',
+  WatchdogStatusExternal: '外部執行中',
   // import local server
   ImportLocalServer: '匯入本機伺服器',
   ImportLocalServerDesc:

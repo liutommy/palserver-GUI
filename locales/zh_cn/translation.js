@@ -412,6 +412,7 @@ const zh_cn = {
   WatchdogStatusRestarting: '重启中',
   WatchdogStatusGaveUp: '已放弃重启',
   WatchdogStatusUnmonitored: '未受监控',
+  WatchdogStatusExternal: '外部运行中',
   // import local server
   ImportLocalServer: '导入本机服务器',
   ImportLocalServerDesc:

@@ -5,7 +5,9 @@ export type WatchdogUIState =
   | 'unmonitored'
   | 'restarting'
   | 'gave-up'
-  | 'stopped';
+  | 'stopped'
+  /** 該路徑有非 GUI 啟動的伺服器在跑 — 未受監控,按啟動可優雅接管 */
+  | 'external';
 
 export type WatchdogStatus = {
   serverId: string;

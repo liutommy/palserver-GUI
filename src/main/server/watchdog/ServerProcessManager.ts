@@ -170,6 +170,19 @@ class ServerProcessManager {
       state = 'gave-up';
     } else if (running) {
       state = config.enabled ? 'protected' : 'unmonitored';
+    } else {
+      // GUI 沒有在管理 — 檢查是否有外部啟動的伺服器在同路徑上跑
+      // (只在非執行狀態下查,避免頻繁的狀態廣播都觸發 CIM 查詢)
+      try {
+        const external = await findProcessesUnderPath(
+          resolveServerPath(serverId),
+        );
+        if (external.length > 0) {
+          state = 'external';
+        }
+      } catch (e) {
+        //
+      }
     }
 
     return {
@@ -232,9 +245,16 @@ class ServerProcessManager {
     entry.state = 'starting';
     entry.startedAt = Date.now();
 
-    // 開服前掃除同路徑的殘留程序,保證單一實例
+    // 開服前處理同路徑上既有的程序,保證單一實例。
+    // 使用者手動啟動時可能是要接管一台外部啟動的伺服器 —
+    // 先優雅存檔關機,不能不存檔就強殺;
+    // watchdog 重啟路徑的程序已在上游處理過,直接清掃即可
     try {
-      await sweepServerProcesses(entry.serverPath);
+      if (intent === 'user') {
+        await this.takeOverExistingProcesses(entry);
+      } else {
+        await sweepServerProcesses(entry.serverPath);
+      }
     } catch (e) {
       //
     }
@@ -354,6 +374,33 @@ class ServerProcessManager {
     if (config.autoRestartHours > 0) {
       this.armScheduledRestart(entry, config.autoRestartHours);
     }
+  }
+
+  /**
+   * 接管同路徑上既有的伺服器程序 (外部啟動的實例或殘留孤兒):
+   * REST/RCON 優雅存檔 + 關機 → 等待退出 → 仍存活才強殺。
+   * 外部實例通常是使用者自己開的,不能不存檔就 taskkill。
+   */
+  private async takeOverExistingProcesses(entry: ManagedServer) {
+    let existing = await findProcessesUnderPath(entry.serverPath);
+    if (existing.length === 0) return;
+
+    const delivered = await this.gracefulShutdown(
+      entry.serverId,
+      10,
+      'palserver-GUI is taking over — server restarting...',
+    );
+    if (delivered) {
+      // 等待存檔 + 關機倒數 + 程序退出
+      const deadline = Date.now() + 90000;
+      while (Date.now() < deadline) {
+        existing = await findProcessesUnderPath(entry.serverPath);
+        if (existing.length === 0) return;
+        await sleep(2000);
+      }
+    }
+    // REST/RCON 不可用或關機逾時 → 強殺後備
+    await sweepServerProcesses(entry.serverPath);
   }
 
   private handleTermination(entry: ManagedServer) {
