@@ -38,6 +38,8 @@ export default function EngineNeedInstall() {
     useState(false);
   const [serverEnginehasInstall, setServerEngineHasInstall] = useState(false);
   const [serverInstallMessage, setServerInstallMessage] = useState('');
+  // 按下安裝/修復後的二次確認 — 這會下載完整的 Palworld 伺服器 (~6GB)
+  const [confirmingInstall, setConfirmingInstall] = useState(false);
 
   function runServerInstall() {
     // 執行伺服器安裝
@@ -185,6 +187,16 @@ export default function EngineNeedInstall() {
                 ? t('AllServersUpdated')
                 : t('UpdateReminder'))}
           </div>
+          {(engineNeedInstall || engineHasError) && !serverEnginehasInstall && (
+            <div className="flex gap-8 mb-4 opacity-80">
+              {t('InstallSkipHint')}
+            </div>
+          )}
+          {confirmingInstall && !serverEnginehasInstall && (
+            <div className="flex gap-8 mb-4 font-bold">
+              {t('InstallDownloadWarning')}
+            </div>
+          )}
           <div className="flex gap-8 mt-8 mb-4">{serverInstallMessage}</div>
         </AlertDialog.Description>
         <Flex gap="3" mt="4" justify="end">
@@ -195,6 +207,25 @@ export default function EngineNeedInstall() {
                   {t('Close')}
                 </Button>
               </AlertDialog.Cancel>
+            ) : confirmingInstall ? (
+              <>
+                <Button
+                  color="gray"
+                  variant="soft"
+                  onClick={() => setConfirmingInstall(false)}
+                >
+                  {t('Cancel')}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setConfirmingInstall(false);
+                    runServerReInstall();
+                  }}
+                  loading={serverEngineStartInstall}
+                >
+                  {t('ConfirmDownload')}
+                </Button>
+              </>
             ) : (
               <>
                 {/* 只匯入外部伺服器的使用者不需要安裝內建引擎,允許跳過 */}
@@ -207,14 +238,12 @@ export default function EngineNeedInstall() {
                     {t('Close')}
                   </Button>
                 </AlertDialog.Cancel>
-                <AlertDialog.Action>
-                  <Button
-                    onClick={runServerReInstall}
-                    loading={serverEngineStartInstall}
-                  >
-                    {t('Fix')}
-                  </Button>
-                </AlertDialog.Action>
+                <Button
+                  onClick={() => setConfirmingInstall(true)}
+                  loading={serverEngineStartInstall}
+                >
+                  {t('Fix')}
+                </Button>
               </>
             ))}
           {engineNeedInstall &&
@@ -224,6 +253,25 @@ export default function EngineNeedInstall() {
                   {t('Close')}
                 </Button>
               </AlertDialog.Cancel>
+            ) : confirmingInstall ? (
+              <>
+                <Button
+                  color="gray"
+                  variant="soft"
+                  onClick={() => setConfirmingInstall(false)}
+                >
+                  {t('Cancel')}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setConfirmingInstall(false);
+                    runServerInstall();
+                  }}
+                  loading={serverEngineStartInstall}
+                >
+                  {t('ConfirmDownload')}
+                </Button>
+              </>
             ) : (
               <>
                 {/* 只匯入外部伺服器的使用者不需要安裝內建引擎,允許跳過 */}
@@ -236,14 +284,12 @@ export default function EngineNeedInstall() {
                     {t('Close')}
                   </Button>
                 </AlertDialog.Cancel>
-                <AlertDialog.Action>
-                  <Button
-                    onClick={runServerInstall}
-                    loading={serverEngineStartInstall}
-                  >
-                    {t('Install')}
-                  </Button>
-                </AlertDialog.Action>
+                <Button
+                  onClick={() => setConfirmingInstall(true)}
+                  loading={serverEngineStartInstall}
+                >
+                  {t('Install')}
+                </Button>
               </>
             ))}
           {engineNeedUpdate && (

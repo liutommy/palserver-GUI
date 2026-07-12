@@ -465,6 +465,12 @@ const zh_tw = {
   StartOnBoot: '開機自動啟動',
   StartOnBootDesc: 'Windows 登入時自動在系統匣啟動 palserver-GUI。',
   // log viewer
+  // engine install dialog
+  InstallSkipHint:
+    '已經有現成的專用伺服器？按「關閉」跳過安裝，直接在首頁點右鍵 →「匯入本機伺服器」即可納管，之後隨時可回來安裝。',
+  InstallDownloadWarning:
+    '注意：這將透過 Steam 下載完整的 Palworld 專用伺服器（約 6 GB）。只有要用 GUI 建立全新伺服器時才需要，確定要繼續嗎？',
+  ConfirmDownload: '確認下載',
   LogSourceConsole: '伺服器主控台',
   LogSourcePalguard: 'PalDefender 日誌',
   LogSourceCrashes: '崩潰紀錄',

@@ -478,6 +478,12 @@ const en = {
   StartOnBootDesc:
     'Launch palserver-GUI in the system tray when Windows starts.',
   // log viewer
+  // engine install dialog
+  InstallSkipHint:
+    'Already have a dedicated server? Click "Close" to skip installation, then right-click on the home page → "Import Local Server" to manage it. You can come back and install anytime.',
+  InstallDownloadWarning:
+    'Note: this downloads the full Palworld dedicated server (~6 GB) via Steam. It is only needed to create brand-new servers from the GUI. Continue?',
+  ConfirmDownload: 'Confirm Download',
   LogSourceConsole: 'Server Console',
   LogSourcePalguard: 'PalDefender Log',
   LogSourceCrashes: 'Crash Dumps',

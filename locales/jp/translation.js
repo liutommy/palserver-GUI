@@ -466,6 +466,12 @@ const jp = {
   StartOnBootDesc:
     'Windows ログイン時に palserver-GUI をタスクトレイで起動します。',
   // log viewer
+  // engine install dialog
+  InstallSkipHint:
+    '既に専用サーバーをお持ちですか？「閉じる」でインストールをスキップし、ホーム画面の右クリック →「ローカルサーバーをインポート」で管理できます。インストールは後からいつでも可能です。',
+  InstallDownloadWarning:
+    '注意：Steam 経由で Palworld 専用サーバー全体（約 6 GB）をダウンロードします。GUI から新規サーバーを作成する場合のみ必要です。続行しますか？',
+  ConfirmDownload: 'ダウンロードを確認',
   LogSourceConsole: 'サーバーコンソール',
   LogSourcePalguard: 'PalDefender ログ',
   LogSourceCrashes: 'クラッシュ記録',

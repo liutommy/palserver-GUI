@@ -496,6 +496,12 @@ const fr = {
   StartOnBootDesc:
     'Lance palserver-GUI dans la zone de notification au démarrage de Windows.',
   // log viewer
+  // engine install dialog
+  InstallSkipHint:
+    "Vous avez déjà un serveur dédié ? Cliquez sur « Fermer » pour ignorer l'installation, puis clic droit sur la page d'accueil → « Importer un serveur local ». Vous pourrez installer plus tard à tout moment.",
+  InstallDownloadWarning:
+    'Attention : ceci télécharge le serveur dédié Palworld complet (~6 Go) via Steam. Nécessaire uniquement pour créer de nouveaux serveurs depuis le GUI. Continuer ?',
+  ConfirmDownload: 'Confirmer le téléchargement',
   LogSourceConsole: 'Console du serveur',
   LogSourcePalguard: 'Journal PalDefender',
   LogSourceCrashes: 'Rapports de crash',
