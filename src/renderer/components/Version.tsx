@@ -54,50 +54,9 @@ export default function Version() {
             onClick={() => {
               window.electron.openLink('https://github.com/Dalufishe');
             }}
-            // dangerouslySetInnerHTML={{
-            //   __html: formatLocale(LOCALES[appLanguage].SupportBy, ['TOC']),
-            // }}
           >
             Dalufishe
           </span>
-          , Supported by{' '}
-          <span
-            className="text-xs underline cursor-pointer"
-            style={{ color: 'white' }}
-            onClick={() => {
-              window.electron.openLink('https://toc.icu/');
-            }}
-            // dangerouslySetInnerHTML={{
-            //   __html: formatLocale(LOCALES[appLanguage].SupportBy, ['TOC']),
-            // }}
-          >
-            TOC
-          </span>
-        </div>
-      </div>
-      {/* ads */}
-      <div>
-        <div
-          className="w-60 h-[60px] bg-transparent -translate-x-7 cursor-pointer hover:scale-110 transition-all"
-          onClick={() => {
-            window.electron.openLink(
-              `${SERVER_URL}/data/links/${language}/Ads`,
-            );
-          }}
-          id="ads-link"
-          style={{ display: 'none' }} // 預設隱藏
-        >
-          <img
-            src={`${SERVER_URL}/static/ads/${language}.png`}
-            alt=""
-            className="w-full h-full"
-            onLoad={(e) =>
-              (e.target.parentElement.style.display = 'block')
-            }
-            onError={(e) =>
-              (e.target.parentElement.style.display = 'none')
-            }
-          />
         </div>
       </div>
     </div>

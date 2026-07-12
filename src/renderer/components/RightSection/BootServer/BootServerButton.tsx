@@ -4,9 +4,6 @@ import Channels from '../../../../main/ipcs/channels';
 import useSelectedServerInstance from '../../../redux/selectedServerInstance/useSelectedServerInstance';
 import useIsRunningServers from '../../../redux/isRunningServers/useIsRunningServers';
 import { AlertDialog } from '@radix-ui/themes';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import db from '../../../firebase/db';
-import { SERVER_URL, VERSION } from '../../../../constant/app';
 
 export default function BootServerButton() {
   const { t } = useTranslation();
@@ -17,15 +14,6 @@ export default function BootServerButton() {
 
   // 啟動伺服器
   const handleBootServer = async () => {
-    try {
-      // collect data
-      fetch(`${SERVER_URL}/api/server/boot-count?version=${VERSION}`, {
-        method: 'PUT',
-      }).then((response) => response.json());
-    } catch (e) {
-      //
-    }
-
     // setting query port (thanks Pumpkin at Hydra Network <3)
     const queryPorts = isRunningServers.map((server) => server.queryPort);
     let queryPort = 27015;

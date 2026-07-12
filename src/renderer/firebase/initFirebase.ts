@@ -1,5 +1,4 @@
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAr-v78qAWwJEUnE7N6eh0x46f3wfJk36U',
@@ -12,7 +11,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+// (Analytics 已移除 — 不回傳使用統計;app 本身保留給版本檢查等唯讀功能)
 const firebaseApp = initializeApp(firebaseConfig);
-const analytics = getAnalytics(firebaseApp);
 
 export default firebaseApp;

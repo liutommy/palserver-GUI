@@ -5,7 +5,7 @@ import _ from 'lodash';
 import Channels from '../../../../main/ipcs/channels';
 import SecureEye from '../../SecureEye';
 import uniqid from 'uniqid';
-import { SERVER_URL, VERSION } from '../../../../constant/app';
+import { SERVER_URL } from '../../../../constant/app';
 import Link from '../../Link';
 
 const defaultServerConfigOptions = {
@@ -54,15 +54,6 @@ export default function CreateServerAlert() {
   );
 
   const handleCreateServer = async () => {
-    try {
-      // collect data
-      fetch(`${SERVER_URL}/api/server/create-count?version=${VERSION}`, {
-        method: 'PUT',
-      }).then((response) => response.json());
-    } catch (e) {
-      //
-    }
-
     // create server
     window.electron.ipcRenderer.invoke(Channels.createServerInstance, {
       ServerName: `"${serverConfigOptions.serverName.value}"`,

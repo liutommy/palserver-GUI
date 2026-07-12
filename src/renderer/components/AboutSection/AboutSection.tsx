@@ -25,15 +25,6 @@ export default function AboutSection() {
       </div>
       <div className="absolute right-2 flex gap-2 items-center">
         <Button
-          size="1"
-          color="pink"
-          onClick={() => {
-            window.electron.openLink('https://buymeacoffee.com/dalufish');
-          }}
-        >
-          {t('SupportGUI')}
-        </Button>
-        <Button
           title={t('ServerListFolder')}
           onClick={() => {
             window.electron.openExplorer(

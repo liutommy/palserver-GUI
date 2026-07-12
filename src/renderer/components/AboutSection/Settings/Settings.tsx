@@ -1,6 +1,6 @@
 import { AlertDialog, Button, Flex, Select, Switch } from '@radix-ui/themes';
 import React, { useEffect, useState } from 'react';
-import { MdCoffee, MdSettings } from 'react-icons/md';
+import { MdSettings } from 'react-icons/md';
 import useTranslation from '../../../hooks/translation/useTranslation';
 import _ from 'lodash';
 import useLanguage from '../../../hooks/translation/useLanguage';
@@ -140,19 +140,6 @@ export default function Settings() {
           </div>
 
           <div className="flex items-center justify-center gap-8 mt-8 mb-4">
-            {/* <div
-                onClick={() => {
-                  window.electron.openLink('https://buymeacoffee.com/dalufish');
-                }}
-                className="select-none"
-              >
-                <img
-                  src={`https://img.buymeacoffee.com/button-api/?text=${t(
-                    'BuyMeACoffee',
-                  )}&emoji=&slug=Dalufish&button_colour=FFDD00&font_colour=000000&font_family=Comic&outline_colour=000000&coffee_colour=ffffff`}
-                  alt=""
-                />
-              </div> */}
             <FaDiscord
               size={48}
               color="#5562EA"
@@ -169,16 +156,8 @@ export default function Settings() {
               className="cursor-pointer"
               onClick={() => {
                 window.electron.openLink(
-                  'https://github.com/Dalufishe/palserver-GUI',
+                  'https://github.com/liutommy/palserver-GUI',
                 );
-              }}
-            />
-            <MdCoffee
-              size={48}
-              color="#ff08a9"
-              className="cursor-pointer"
-              onClick={() => {
-                window.electron.openLink('https://buymeacoffee.com/dalufish');
               }}
             />
           </div>
